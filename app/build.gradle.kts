@@ -13,8 +13,6 @@ android {
 		targetSdk = 34
 		versionCode = 1
 		versionName = "1.0"
-
-		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
 
 	buildTypes {
@@ -41,4 +39,10 @@ dependencies {
 	implementation("androidx.appcompat:appcompat:1.6.1")
 	implementation("com.google.android.material:material:1.12.0")
 	implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+	// ONNX
+	implementation("com.microsoft.onnxruntime:onnxruntime-android:1.18.0")
+	implementation("com.microsoft.onnxruntime:onnxruntime-training-android:1.18.0")
+	implementation("com.microsoft.onnxruntime:onnxruntime-extensions-android:0.9.0")
+
 }
