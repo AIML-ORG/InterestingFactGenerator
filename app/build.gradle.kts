@@ -45,9 +45,4 @@ dependencies {
 	implementation("com.google.android.material:material:1.12.0")
 	implementation("androidx.constraintlayout:constraintlayout:2.2.0")
 
-	// ONNX
-//	implementation("com.microsoft.onnxruntime:onnxruntime-android:1.20.0")
-//	implementation("com.microsoft.onnxruntime:onnxruntime-training-android:1.19.2")
-//	implementation("com.microsoft.onnxruntime:onnxruntime-extensions-android:0.13.0")
-
 }
