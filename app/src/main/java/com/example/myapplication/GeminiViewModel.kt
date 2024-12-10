@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.SCHEMA.KEYWORDS_SCHEMA
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,7 +20,11 @@ class GeminiViewModel : ViewModel() {
 				val generateHistoryPrompt = "${PROMPTS.GENERATE_HISTORY} $generateUser"
 				val generatedHistory = repository.queryGemini(generateHistoryPrompt)
 
-				"$generateUser\n\n\n$generatedHistory"
+				//GenerateKeywords
+				val generateKeywordsPrompt = "${PROMPTS.GENERATE_KEYWORDS} $generatedHistory"
+				val generatedKeywords = repository.queryGemini(generateKeywordsPrompt, true, KEYWORDS_SCHEMA)
+
+				"$generateUser\n\n\n$generatedHistory\n\n\n$generatedKeywords"
 			}
 			onResult(response)
 		}

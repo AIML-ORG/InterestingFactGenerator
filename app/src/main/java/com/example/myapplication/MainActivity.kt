@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
 		button.setOnClickListener {
 			val prompt = editText.text.toString()
-			viewModel.getInterestingReads() {
+			viewModel.getInterestingReads {
 				textViewResult.text = it
 			}
 		}
