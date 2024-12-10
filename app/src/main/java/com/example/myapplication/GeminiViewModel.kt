@@ -9,11 +9,17 @@ import kotlinx.coroutines.withContext
 class GeminiViewModel : ViewModel() {
 
 	private val repository = GeminiRepository()
-
-	fun queryGemini(prompt: String, onResult: (String) -> Unit) {
+	fun getInterestingReads(onResult: (String) -> Unit) {
 		viewModelScope.launch {
 			val response = withContext(Dispatchers.IO) {
-				repository.queryGemini(prompt)
+				// Generate User
+				val generateUser = repository.queryGemini(PROMPTS.GENERATE_USER_PERSONA)
+
+				//Generate History
+				val generateHistoryPrompt = "${PROMPTS.GENERATE_HISTORY} $generateUser"
+				val generatedHistory = repository.queryGemini(generateHistoryPrompt)
+
+				"$generateUser\n\n\n$generatedHistory"
 			}
 			onResult(response)
 		}

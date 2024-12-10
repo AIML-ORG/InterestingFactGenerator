@@ -35,15 +35,10 @@ class GeminiRepository {
 	}
 
 	suspend fun queryGemini(prompt: String): String {
-		val initialPrompt =
-			"[age, gender, location, occupation, relationship, kids, education, health info, wealth info]\n\ngenerate user persona of india based user keeping all above criteria in mind.\nThen create top 10 deatiled interests of user which are particular to his persona. It should not be generic. consider all info while generating a persona. DO not add any further detail. DO not add and prefix, suffix to answer Just give the info asked"
-		val thanksPrompt = "Thanks"
 
 		val requestData = RequestData(
 			contents = listOf(
-				Content(role = "user", parts = listOf(Part(text = initialPrompt))),
-//				Content(role = "model", parts = listOf(Part(text = thanksPrompt))),
-//				Content(role = "user", parts = listOf(Part(text = prompt)))
+				Content(role = "user", parts = listOf(Part(text = prompt))),
 			),
 			generationConfig = GenerationConfig()
 		)

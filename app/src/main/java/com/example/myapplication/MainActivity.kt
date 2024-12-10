@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
 
 		button.setOnClickListener {
 			val prompt = editText.text.toString()
-			viewModel.queryGemini(prompt) { response ->
-				textViewResult.text = response
+			viewModel.getInterestingReads() {
+				textViewResult.text = it
 			}
 		}
 	}
