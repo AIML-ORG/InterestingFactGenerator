@@ -16,23 +16,36 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
-
+import java.util.concurrent.TimeUnit
 
 // Data classes for request and response
-data class RequestData(val contents: List<Content>, val tools: List<Tool>)
-data class Content(val parts: List<Part>)
+data class RequestData(
+	val contents: List<Content>,
+	val generationConfig: GenerationConfig? = null
+)
+
+data class Content(val role: String = "user", val parts: List<Part>)
 data class Part(val text: String)
-data class Tool(val google_search_retrieval: GoogleSearchRetrieval?)
-data class GoogleSearchRetrieval(val dynamic_retrieval_config: DynamicRetrievalConfig)
-data class DynamicRetrievalConfig(val mode: String, val dynamic_threshold: Int)
+data class GenerationConfig(
+	val temperature: Double = 2.0,
+	val topK: Int = 40,
+	val topP: Double = 0.95,
+	val maxOutputTokens: Int = 8192,
+	val responseMimeType: String = "text/plain"
+)
 
 data class ResponseData(val candidates: List<Candidate>)
-data class Candidate(val content: String, val finish_reason: String)
+data class Candidate(val content: Content, val finishReason: String)
 
 private const val GOOGLE_API_KEY = "AIzaSyDQ-lB9oa920yqpJJCRVYiJbU_opbJ9Z0U"  // Replace with your actual API key
 
+const val FLASH_8B = "gemini-1.5-flash-8b"
+const val GEMINI_PRO = "gemini-1.5-pro"
+const val GEMINI_EXP = "gemini-exp-1206"
+
 interface GeminiApi {
-	@POST("v1beta/models/gemini-1.5-flash-8b:generateContent?key=$GOOGLE_API_KEY")
+
+	@POST("v1beta/models/$FLASH_8B:generateContent?key=$GOOGLE_API_KEY")
 	suspend fun generateContent(@Body request: RequestData): ResponseData
 }
 
@@ -60,9 +73,7 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
-
 	private suspend fun queryGemini(prompt: String): String {
-
 		val gson = GsonBuilder().create()
 
 		val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -71,6 +82,10 @@ class MainActivity : AppCompatActivity() {
 
 		val okHttpClient = OkHttpClient.Builder()
 			.addInterceptor(loggingInterceptor)
+			.connectTimeout(10, TimeUnit.MINUTES)
+			.readTimeout(10, TimeUnit.MINUTES)
+			.callTimeout(10, TimeUnit.MINUTES)
+			.writeTimeout(10, TimeUnit.MINUTES)
 			.build()
 
 		val retrofit = Retrofit.Builder()
@@ -80,27 +95,23 @@ class MainActivity : AppCompatActivity() {
 			.build()
 
 		val geminiApi = retrofit.create(GeminiApi::class.java)
-
+		val initialPrompt =
+			"[age, gender, location, occupation, relationship, kids, education, health info, wealth info]\n\ngenerate user persona of india based user keeping all above criteria in mind.\nThen create top 10 deatiled interests of user which are particular to his persona. It should not be generic. consider all info while generating a persona. DO not add any further detail. DO not add and prefix, suffix to answer Just give the info asked"
+		val thanksPrompt = "Thanks"
 
 		val requestData = RequestData(
-			contents = listOf(Content(parts = listOf(Part(text = prompt)))), tools = listOf(
-				Tool(
-					google_search_retrieval = GoogleSearchRetrieval(
-						DynamicRetrievalConfig(
-							"MODE_DYNAMIC", 1
-						)
-					)
-				)
-			)
+			contents = listOf(
+				Content(role = "user", parts = listOf(Part(text = initialPrompt))),
+//				Content(role = "model", parts = listOf(Part(text = thanksPrompt))),
+//				Content(role = "user", parts = listOf(Part(text = prompt)))
+			),
+			generationConfig = GenerationConfig()
 		)
 
 		return try {
 			val response = geminiApi.generateContent(requestData)
-
-
-			// Process the response to extract the text content
-			val generatedText = response.candidates.firstOrNull()?.content ?: "No content generated"
-
+			val generatedText =
+				response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text ?: "No content generated"
 
 			generatedText
 
