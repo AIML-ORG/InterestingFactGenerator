@@ -12,4 +12,7 @@ object PROMPTS {
 	const val GENERATE_KEYWORDS =
 		"Below is the History of user of whatever he/she has searched on respective app. Analyze it ang give top 5 topic keywords. keywords should be specific to user and should not be generic. keywords should be very detailed. Do not add any additional info. DO not add any prefix, suffix to answer. Just give the info asked:\n"
 
+	const val GENERATE_INTERESTING_FACT =
+		"give 1 very interesting and positive fact about the following with respect to real world.Do not add any additional info. DO not add any prefix, suffix to answer. Just give the info asked:\n"
+
 }
