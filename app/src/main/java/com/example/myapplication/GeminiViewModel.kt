@@ -1,14 +1,15 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.SCHEMA.KEYWORDS_SCHEMA
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class GeminiViewModel : ViewModel() {
-
+	private val TAG = "GeminiViewModel"
 	private val repository = GeminiRepository()
 	fun getInterestingReads(onResult: (String) -> Unit) {
 		viewModelScope.launch {
@@ -22,7 +23,14 @@ class GeminiViewModel : ViewModel() {
 
 				//GenerateKeywords
 				val generateKeywordsPrompt = "${PROMPTS.GENERATE_KEYWORDS} $generatedHistory"
-				val generatedKeywords = repository.queryGemini(generateKeywordsPrompt, true, KEYWORDS_SCHEMA)
+				val generatedKeywords = repository.queryGemini(generateKeywordsPrompt, true)
+
+				val topTopics = Gson().fromJson(generatedKeywords, TopTopics::class.java)
+
+				topTopics.very_detailed_top_5_topics?.forEach {
+					Log.d(TAG, "getInterestingReads: $it")
+				}
+
 
 				"$generateUser\n\n\n$generatedHistory\n\n\n$generatedKeywords"
 			}

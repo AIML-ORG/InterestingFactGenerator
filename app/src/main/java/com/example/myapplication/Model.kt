@@ -61,3 +61,7 @@ data class Items(
 data class ResponseData(val candidates: List<Candidate>)
 data class Candidate(val content: Content, val finishReason: String, val safetyRatings: List<SafetyRating>)
 data class SafetyRating(val category: String, val probability: String)
+
+data class TopTopics(
+	var very_detailed_top_5_topics: List<String>? = null
+)
