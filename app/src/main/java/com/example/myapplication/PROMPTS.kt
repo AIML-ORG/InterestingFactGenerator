@@ -13,6 +13,6 @@ object PROMPTS {
 		"Below is the History of user of whatever he/she has searched on respective app. Analyze it ang give top 5 topic keywords. keywords should be specific to user and should not be generic. keywords should be very detailed. Do not add any additional info. DO not add any prefix, suffix to answer. Just give the info asked:\n"
 
 	const val GENERATE_INTERESTING_FACT =
-		"give 1 very interesting and positive fact about the following with respect to real world.Do not add any additional info. DO not add any prefix, suffix to answer. Just give the info asked:\n"
+		"Analyze the below Topic and give one short, very interesting and positive fact about this particular topic. It should be with respect to real world. The fact should be self containing. If it refers to an entity, it should contain that entity name. It should start like: \"Did you know? \" It should be 20-30 words and engaging to read. DO not add any prefix, suffix to answer. Just give the info asked:\n"
 
 }

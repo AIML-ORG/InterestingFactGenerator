@@ -28,13 +28,19 @@ class GeminiViewModel : ViewModel() {
 
 				"$generateUser\n\n\n$generatedHistory\n\n\n$generatedKeywords"
 
-				val facts = ArrayList<String>()
+				val facts = ArrayList<Fact>()
 				topTopics.very_detailed_top_5_topics?.forEach {
 					Log.d(TAG, "getInterestingReads: $it")
 					//GenerateKeywords
 					val generateInterestingFactPrompt = "${PROMPTS.GENERATE_INTERESTING_FACT} $it"
-					val generatedFact = repository.queryGemini(generateInterestingFactPrompt, model = GEMINI_EXP)
-					facts.add(generatedFact)
+					var generatedFact = repository.queryGemini(generateInterestingFactPrompt/* model = GEMINI_EXP*/)
+					generatedFact = generatedFact.removePrefix("Did you know? ")
+					facts.add(
+						Fact(
+							generatedFact,
+							"https://www.google.com/?search=${java.net.URLEncoder.encode(it, "UTF-8")}"
+						)
+					)
 				}
 
 				"$generateUser\n\n\n$generatedHistory\n\n\n$generatedKeywords\n\n\n${facts.joinToString("\n")}"
@@ -44,3 +50,7 @@ class GeminiViewModel : ViewModel() {
 		}
 	}
 }
+
+data class Fact(
+	val fact: String, val url: String
+)
