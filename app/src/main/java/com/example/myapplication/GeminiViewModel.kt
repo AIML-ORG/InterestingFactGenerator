@@ -24,9 +24,12 @@ class GeminiViewModel : ViewModel() {
 				//GenerateKeywords
 				val generateKeywordsPrompt = "${PROMPTS.GENERATE_KEYWORDS} $generatedHistory"
 				val generatedKeywords = repository.queryGemini(generateKeywordsPrompt, true)
-				val topTopics = Gson().fromJson(generatedKeywords, TopTopics::class.java)
-
-				"$generateUser\n\n\n$generatedHistory\n\n\n$generatedKeywords"
+				val topTopics = try {
+					Gson().fromJson(generatedKeywords, TopTopics::class.java)
+				} catch (e: Exception) {
+					Log.d(TAG, "getInterestingReads: $e")
+					TopTopics()
+				}
 
 				val facts = ArrayList<Fact>()
 				topTopics.very_detailed_top_5_topics?.forEach {
