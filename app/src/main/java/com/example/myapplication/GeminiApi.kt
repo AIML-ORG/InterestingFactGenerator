@@ -9,13 +9,15 @@ import retrofit2.http.Path
 private const val GOOGLE_API_KEY = "AIzaSyDQ-lB9oa920yqpJJCRVYiJbU_opbJ9Z0U"  // Replace with your actual API key
 
 const val FLASH_8B = "gemini-1.5-flash-8b"
-const val GEMINI_PRO = "gemini-1.5-pro"
-const val GEMINI_EXP = "gemini-exp-1206"
+const val FLASH = "gemini-1.5-flash"
+const val FLASH_EXP = "gemini-2.0-flash-exp"
+const val PRO = "gemini-1.5-pro"
+const val PRO_EXP = "gemini-exp-1206"
 
 interface GeminiApi {
 	@POST("v1beta/models/{model}:generateContent?key=$GOOGLE_API_KEY")
 	suspend fun generateContent(
 		@Body request: RequestData,
-		@Path("model") model: String = FLASH_8B
+		@Path("model") model: String = FLASH_EXP
 	): ResponseData
 }

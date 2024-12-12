@@ -27,7 +27,7 @@ class GeminiRepository {
 			.client(okHttpClient).build().create(GeminiApi::class.java)
 	}
 
-	suspend fun queryGemini(prompt: String, jsonResult: Boolean = false, model: String = FLASH_8B): String {
+	suspend fun queryGemini(prompt: String, jsonResult: Boolean = false, model: String = FLASH_EXP): String {
 		val generationConfig =
 			if (jsonResult) GenerationConfig(responseMimeType = "application/json", responseSchema = ResponseSchema())
 			else GenerationConfig()
